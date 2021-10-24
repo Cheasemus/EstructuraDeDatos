@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">DataStructureDemo</string>
+    <string name="ok">Continuar</string>
+    <string name="add">Agregar</string>
+    <string name="data">Dato</string>
+    <string name="delete">Eliminar</string>
+    <string name="search">Buscar</string>
+    <string name="value">Valor</string>
+    <string name="position">Posición</string>
+    <string name="noExists">No existe</string>
+    <string name="selectType">Selecciona un tipo de busqueda</string>
+    <string name="edit">Editar</string>
+
+</resources>
