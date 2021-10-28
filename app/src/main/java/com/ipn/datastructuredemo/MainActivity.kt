@@ -16,7 +16,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity()
 {
-    private val stack = Stack<String>()
+    private val linkedList = LinkedList<String>()
 
     private lateinit var listView: ListView
     private lateinit var root: ConstraintLayout
@@ -36,11 +36,11 @@ class MainActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        for(i in 0.. 30) stack.push("y$i")
+        for(i in 0.. 30) linkedList.add(i.toString())
 
         listView = findViewById(R.id.listview)
         root = findViewById(R.id.root)
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, stack)
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, linkedList)
         listView.adapter = adapter
 
         initDialog()
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity()
         {
             if (value.text.isNotEmpty())
             {
-                stack.add(value.text.toString())
+                linkedList.add(value.text.toString())
                 adapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity()
                     R.id.chipPosition ->
                     {
                         position = Integer.parseInt(data)
-                        if(position < stack.size)
+                        if(position < linkedList.size)
                         {
                             listView.smoothScrollToPosition(position)
                             dialog.dismiss()
@@ -170,9 +170,9 @@ class MainActivity : AppCompatActivity()
         {
             val data = value.text.toString()
             val positionText = p.text.toString()
-            if (data.isNotEmpty() && positionText.isNotEmpty() && Integer.parseInt(positionText) < stack.size)
+            if (data.isNotEmpty() && positionText.isNotEmpty() && Integer.parseInt(positionText) < linkedList.size)
             {
-                stack[Integer.parseInt(positionText)] = data
+                linkedList[Integer.parseInt(positionText)] = data
                 adapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity()
                         position = adapter.getPosition(data)
                         if(position != -1)
                         {
-                            stack.remove(data)
+                            linkedList.remove(data)
                             adapter.notifyDataSetChanged()
                             dialog.dismiss()
                         }
@@ -212,9 +212,9 @@ class MainActivity : AppCompatActivity()
                     R.id.chipPosition ->
                     {
                         position = Integer.parseInt(data)
-                        if(position < stack.size)
+                        if(position < linkedList.size)
                         {
-                            stack.removeAt(Integer.parseInt(data))
+                            linkedList.removeAt(Integer.parseInt(data))
                             adapter.notifyDataSetChanged()
                             dialog.dismiss()
                         }
