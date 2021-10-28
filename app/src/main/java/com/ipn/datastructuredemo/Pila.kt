@@ -12,8 +12,6 @@ class Pila
         for (i in 0..9) pila.push(i)
 
         //Eliminar un elemento por su posición
-
-        //Eliminar un elemento por su posición
         pila.remove(5)
         //Remover y obtener el primer item de la pila
         pila.pop()

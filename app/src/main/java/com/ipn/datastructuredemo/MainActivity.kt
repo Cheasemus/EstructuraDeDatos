@@ -13,10 +13,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity()
 {
-    private val stack = Stack<String>()
+    private var queue: Queue<String> = LinkedList()
+    private var array: ArrayList<String> = ArrayList()
 
     private lateinit var listView: ListView
     private lateinit var root: ConstraintLayout
@@ -36,11 +38,13 @@ class MainActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        for(i in 0.. 30) stack.push("y$i")
+        for(i in 0.. 30) queue.add(i.toString())
+
+        array.addAll(queue)
 
         listView = findViewById(R.id.listview)
         root = findViewById(R.id.root)
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, stack)
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, array)
         listView.adapter = adapter
 
         initDialog()
@@ -50,9 +54,6 @@ class MainActivity : AppCompatActivity()
 
         val searchButton = findViewById<FloatingActionButton>(R.id.floatingActionButton2)
         searchButton.setOnClickListener { showAlertDialogSearch() }
-
-        val editButton = findViewById<FloatingActionButton>(R.id.floatingActionButtonEdit)
-        editButton.setOnClickListener { showAlertDialogEdit() }
 
         val deleteButton = findViewById<FloatingActionButton>(R.id.floatingActionButton3)
         deleteButton.setOnClickListener { showAlertDialogRemove() }
@@ -105,7 +106,10 @@ class MainActivity : AppCompatActivity()
         {
             if (value.text.isNotEmpty())
             {
-                stack.add(value.text.toString())
+                queue.add(value.text.toString())
+                array.clear()
+                array.addAll(queue)
+                //stack.add(value.text.toString())
                 adapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
@@ -143,7 +147,7 @@ class MainActivity : AppCompatActivity()
                     R.id.chipPosition ->
                     {
                         position = Integer.parseInt(data)
-                        if(position < stack.size)
+                        if(position < queue.size)
                         {
                             listView.smoothScrollToPosition(position)
                             dialog.dismiss()
@@ -160,71 +164,12 @@ class MainActivity : AppCompatActivity()
         dialog.show()
     }
 
-    private fun showAlertDialogEdit()
-    {
-        text.text = getString(R.string.edit)
-        p.visibility = View.VISIBLE
-        chipGroup.visibility = View.GONE
-
-        continueBt.setOnClickListener()
-        {
-            val data = value.text.toString()
-            val positionText = p.text.toString()
-            if (data.isNotEmpty() && positionText.isNotEmpty() && Integer.parseInt(positionText) < stack.size)
-            {
-                stack[Integer.parseInt(positionText)] = data
-                adapter.notifyDataSetChanged()
-                dialog.dismiss()
-            }
-            else
-                Toast.makeText(this, getString(R.string.noExists), Toast.LENGTH_SHORT).show()
-        }
-
-        dialog.show()
-    }
-
     private fun showAlertDialogRemove()
     {
-        text.text = getString(R.string.delete)
-        p.visibility = View.GONE
-        chipGroup.visibility = View.VISIBLE
-
-        continueBt.setOnClickListener()
-        {
-            val data = value.text.toString()
-            if (data.isNotEmpty())
-            {
-                val position: Int
-                when (chipGroup.checkedChipId)
-                {
-                    R.id.chipValue ->
-                    {
-                        position = adapter.getPosition(data)
-                        if(position != -1)
-                        {
-                            stack.remove(data)
-                            adapter.notifyDataSetChanged()
-                            dialog.dismiss()
-                        }
-                        else
-                            Toast.makeText(this, getString(R.string.noExists), Toast.LENGTH_SHORT).show()
-                    }
-                    R.id.chipPosition ->
-                    {
-                        position = Integer.parseInt(data)
-                        if(position < stack.size)
-                        {
-                            stack.removeAt(Integer.parseInt(data))
-                            adapter.notifyDataSetChanged()
-                            dialog.dismiss()
-                        }
-                        else
-                            Toast.makeText(this, getString(R.string.noExists), Toast.LENGTH_SHORT).show()
-                    }
-                    else -> Toast.makeText(this, getString(R.string.selectType), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-        dialog.show()
+        queue.remove()
+        array.clear()
+        array.addAll(queue)
+        adapter.notifyDataSetChanged()
+        dialog.dismiss()
     }
 }
